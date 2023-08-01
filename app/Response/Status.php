@@ -19,6 +19,7 @@ class Status
     const MATERIAL_IMPORT = "Material imported successfully.";
 
     const COMPANY_IMPORT = "Company sync successfully.";
+    const CUSTOMER_IMPORT = "Customer imported successfully.";
     const DEPARTMENT_IMPORT = "Department sync successfully.";
     const LOCATION_IMPORT = "Location sync successfully.";
     const ORDER_SAVE = "Order successfully saved.";
@@ -26,10 +27,10 @@ class Status
     const WAREHOUSE_SAVE = "Warehouse successfully saved.";
     const ROLE_SAVE = "Role successfully saved.";
     const CUTOFF_SAVE = "Cut off successfully saved.";
-    const HRI_SAVE = "Hri customer successfully saved.";
+    const CUSTOMER_SAVE = "Customer successfully saved.";
     // DISPLAY DATA
     const USER_DISPLAY = "User display successfully.";
-    const HRI_DISPLAY = "HRI display successfully.";
+    const CUSTOMER_DISPLAY = "Customer display successfully.";
     const STORE_DISPLAY = "Store display successfully.";
     const CATEGORY_DISPLAY = "Category display successfully.";
     const MATERIAL_DISPLAY = "Material display successfully.";
@@ -54,7 +55,7 @@ class Status
     const TRANSACTION_APPROVE = "Transaction successfully approved.";
     const TRANSACTION_RETURN = "Transaction successfully return.";
     const TRANSACTION_SERVE = "Transaction successfully serve.";
-    const HRI_UPDATE = "Hri customer successfully updated.";
+    const CUSTOMER_UPDATE = "Customer successfully updated.";
     //SOFT DELETE
     const ARCHIVE_STATUS = "Successfully archived.";
     const RESTORE_STATUS = "Successfully restored.";
@@ -69,7 +70,7 @@ class Status
     //VALIDATION
     const SINGLE_VALIDATION = "Data has been validated.";
     const INVALID_ACTION = "Invalid action.";
-    const INVALID_UPDATE = "Unable to update this transaction is already approved.";
+    const INVALID_UPDATE = "Unable to update this transaction permission needed.";
     const NEW_PASSWORD = "Please change your password.";
     const EXISTS = "Data already exists.";
     const ACCESS_DENIED = "You do not have permission.";

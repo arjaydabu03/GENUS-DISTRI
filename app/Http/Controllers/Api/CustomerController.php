@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\HRI;
+use App\Models\Customer;
 use App\Response\Status;
 use App\Functions\GlobalFunction;
 
-use App\Http\Requests\HRI\DisplayRequest;
-use App\Http\Requests\HRI\StoreRequest;
-use App\Http\Requests\HRI\CodeRequest;
-use App\Http\Requests\HRI\ImportRequest;
+use App\Http\Requests\Customer\DisplayRequest;
+use App\Http\Requests\Customer\StoreRequest;
+use App\Http\Requests\Customer\CodeRequest;
+use App\Http\Requests\Customer\ImportRequest;
 
-class HriController extends Controller
+class CustomerController extends Controller
 {
     public function index(DisplayRequest $request)
     {
@@ -22,7 +22,7 @@ class HriController extends Controller
         $search = $request->search;
         $paginate = isset($request->paginate) ? $request->paginate : 1;
 
-        $hri = HRI::when($status === "inactive", function ($query) {
+        $customer = Customer::when($status === "inactive", function ($query) {
             $query->onlyTrashed();
         })->when($search, function ($query) use ($search) {
             $query
@@ -30,77 +30,77 @@ class HriController extends Controller
                 ->orWhere("name", "like", "%" . $search . "%");
         });
 
-        $hri = $paginate
-            ? $hri->orderByDesc("updated_at")->paginate($request->rows)
-            : $hri->orderByDesc("updated_at")->get();
+        $customer = $paginate
+            ? $customer->orderByDesc("updated_at")->paginate($request->rows)
+            : $customer->orderByDesc("updated_at")->get();
 
-        $is_empty = $hri->isEmpty();
+        $is_empty = $customer->isEmpty();
 
         if ($is_empty) {
             return GlobalFunction::not_found(Status::NOT_FOUND);
         }
 
-        return GlobalFunction::response_function(Status::HRI_DISPLAY, $hri);
+        return GlobalFunction::response_function(Status::CUSTOMER_DISPLAY, $customer);
     }
 
     public function store(StoreRequest $request)
     {
-        $hri = HRI::create([
+        $customer = Customer::create([
             "code" => $request["code"],
             "name" => $request["name"],
         ]);
-        return GlobalFunction::save(Status::HRI_SAVE, $hri);
+        return GlobalFunction::save(Status::CUSTOMER_SAVE, $customer);
     }
-    public function import_hri(ImportRequest $request)
+    public function import_cutomer(ImportRequest $request)
     {
         $import = $request->all();
 
-        $import = HRI::upsert($import, ["id"], ["code"], ["name"]);
+        $import = Customer::upsert($import, ["id"], ["code"], ["name"]);
 
-        return GlobalFunction::save(Status::HRI_IMPORT, $request->toArray());
+        return GlobalFunction::save(Status::CUSTOMER_IMPORT, $request->toArray());
     }
     public function update(StoreRequest $request, $id)
     {
-        $hri = HRI::find($id);
+        $customer = Customer::find($id);
 
-        $not_found = HRI::where("id", $id)->get();
+        $not_found = Customer::where("id", $id)->get();
 
         if ($not_found->isEmpty()) {
             return GlobalFunction::not_found(Status::NOT_FOUND);
         }
 
-        $hri->update([
+        $customer->update([
             "code" => $request["code"],
             "name" => $request["name"],
         ]);
-        return GlobalFunction::response_function(Status::HRI_UPDATE, $hri);
+        return GlobalFunction::response_function(Status::CUSTOMER_UPDATE, $customer);
     }
     public function destroy($id)
     {
-        $hri = HRI::where("id", $id)
+        $customer = Customer::where("id", $id)
             ->withTrashed()
             ->get();
 
-        if ($hri->isEmpty()) {
+        if ($customer->isEmpty()) {
             return GlobalFunction::not_found(Status::NOT_FOUND);
         }
 
-        $hri = HRI::withTrashed()->find($id);
-        $is_active = HRI::withTrashed()
+        $customer = Customer::withTrashed()->find($id);
+        $is_active = Customer::withTrashed()
             ->where("id", $id)
             ->first();
         if (!$is_active) {
             return $is_active;
         } elseif (!$is_active->deleted_at) {
-            $hri->delete();
+            $customer->delete();
             $message = Status::ARCHIVE_STATUS;
         } else {
-            $hri->restore();
+            $customer->restore();
             $message = Status::RESTORE_STATUS;
         }
-        return GlobalFunction::response_function($message, $hri);
+        return GlobalFunction::response_function($message, $customer);
     }
-    public function validate_hri_code(CodeRequest $request)
+    public function validate_cutomer_code(CodeRequest $request)
     {
         return GlobalFunction::response_function(Status::SINGLE_VALIDATION);
     }

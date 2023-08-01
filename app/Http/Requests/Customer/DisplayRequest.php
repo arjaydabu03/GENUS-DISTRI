@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\HRI;
+namespace App\Http\Requests\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CodeRequest extends FormRequest
+class DisplayRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,7 @@ class CodeRequest extends FormRequest
     public function rules()
     {
         return [
-            "code" => [
-                "required",
-                $this->get("id") ? "unique:hri,code," . $this->get("id") : "unique:hri,code",
-            ],
+            "status" => ["required", "string", "in:active,inactive"],
         ];
     }
 }

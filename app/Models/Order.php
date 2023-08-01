@@ -40,6 +40,10 @@ class Order extends Model
     {
         return $this->belongsTo(Transaction::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function time()
     {
         return $this->belongsTo(Order::class);

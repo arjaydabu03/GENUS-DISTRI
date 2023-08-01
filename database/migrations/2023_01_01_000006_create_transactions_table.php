@@ -21,7 +21,9 @@ return new class extends Migration {
             $table->timestamp("date_served")->nullable();
             $table->string("order_type")->nullable();
 
-            $table->string("hri_customer")->nullable();
+            $table->integer("client_id")->nullable();
+            $table->string("client_code")->nullable();
+            $table->string("client_name")->nullable();
 
             $table->integer("company_id");
             $table->string("company_code");
@@ -39,32 +41,32 @@ return new class extends Migration {
             $table->string("customer_code");
             $table->string("customer_name");
 
-            $table->unsignedBigInteger("charge_company_id")->index();
-            $table
-                ->foreign("charge_company_id")
-                ->references("sync_id")
-                ->on("company");
+            // $table->unsignedBigInteger("charge_company_id")->index();
+            // $table
+            //     ->foreign("charge_company_id")
+            //     ->references("sync_id")
+            //     ->on("company");
 
-            $table->string("charge_company_code");
-            $table->string("charge_company_name");
+            // $table->string("charge_company_code");
+            // $table->string("charge_company_name");
 
-            $table->unsignedBigInteger("charge_department_id")->index();
-            $table
-                ->foreign("charge_department_id")
-                ->references("sync_id")
-                ->on("department");
+            // $table->unsignedBigInteger("charge_department_id")->index();
+            // $table
+            //     ->foreign("charge_department_id")
+            //     ->references("sync_id")
+            //     ->on("department");
 
-            $table->string("charge_department_code");
-            $table->string("charge_department_name");
+            // $table->string("charge_department_code");
+            // $table->string("charge_department_name");
 
-            $table->unsignedBigInteger("charge_location_id")->index();
-            $table
-                ->foreign("charge_location_id")
-                ->references("sync_id")
-                ->on("location");
+            // $table->unsignedBigInteger("charge_location_id")->index();
+            // $table
+            //     ->foreign("charge_location_id")
+            //     ->references("sync_id")
+            //     ->on("location");
 
-            $table->string("charge_location_code");
-            $table->string("charge_location_name");
+            // $table->string("charge_location_code");
+            // $table->string("charge_location_name");
 
             $table->string("rush")->nullable();
             $table->string("reason")->nullable();

@@ -36,7 +36,7 @@ class ApproverController extends Controller
             ->with("scope_approval")
             ->first()
             ->scope_approval->pluck("location_id");
-            
+
         $approver_id = User::where("id", Auth::id())->pluck("id");
 
         $order = Transaction::with("orders")
@@ -75,10 +75,10 @@ class ApproverController extends Controller
             ->when($status === "disapprove", function ($query) use ($approver_id) {
                 $query
                     ->whereNotNull("date_approved")
-                    ->where("approver_id",$approver_id)
+                    ->where("approver_id", $approver_id)
                     ->onlyTrashed();
             })
-          ->when($status === "all", function ($query) use ($approver_id) {
+            ->when($status === "all", function ($query) use ($approver_id) {
                 $query->where("approver_id", $approver_id)->withTrashed();
             })
             ->orderByRaw("CASE WHEN rush IS NULL AND date_approved IS NULL THEN 0 ELSE 1 END DESC")
@@ -185,8 +185,6 @@ class ApproverController extends Controller
             ->with("scope_approval")
             ->first()
             ->scope_approval->pluck("location_id");
-            
-     
 
         $pending = Transaction::whereNull("date_approved")
             ->whereNot("requestor_id", Auth::id())
@@ -196,12 +194,8 @@ class ApproverController extends Controller
             ->get()
             ->count();
 
-      
-
         $count = [
-           
             "pending" => $pending,
-           
         ];
 
         return GlobalFunction::response_function(Status::COUNT_DISPLAY, $count);

@@ -17,7 +17,7 @@ use App\Http\Controllers\Api\CutoffController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\LocationController;
-use App\Http\Controllers\Api\HriController;
+use App\Http\Controllers\Api\CustomerController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -94,13 +94,16 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::apiResource("company", CompanyController::class);
     Route::apiResource("department", DepartmentController::class);
     Route::apiResource("location", LocationController::class);
-    Route::apiResource("hri", HriController::class);
-    Route::post("hri/validate", [HriController::class, "validate_hri_code"]);
-    Route::patch("hri_archive/{id}", [HriController::class, "destroy"]);
+
+    Route::apiResource("customer", CustomerController::class);
+    Route::post("import_cutomer", [CustomerController::class, "import_cutomer"]);
+    Route::post("cutomer/validate", [CustomerController::class, "validate_cutomer_code"]);
+    Route::patch("cutomer_archive/{id}", [CustomerController::class, "destroy"]);
 });
 
 Route::post("login", [UserController::class, "login"]);
-Route::post("sms_order", [OrderController::class, "sms_order"]);
+Route::post("sms_order_falcon", [OrderController::class, "sms_order_falcon"]);
+Route::post("sms_order_hri", [OrderController::class, "sms_order_hri"]);
 Route::post("sms_cancel", [OrderController::class, "sms_cancel"]);
 // Route::get("reports", [ReportController::class, "view"]);
 // Route::get("users", [UserController::class, "index"]);

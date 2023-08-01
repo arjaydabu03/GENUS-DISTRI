@@ -4,6 +4,7 @@ namespace App\Http\Requests\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Carbon\carbon;
 use App\Models\Cutoff;
 use App\Models\Transaction;
@@ -34,12 +35,18 @@ class UpdateRequest extends FormRequest
         $requestor_id = $this->user()->id;
         $requestor_role = $this->user()->role_id;
 
+        $user_permission = Auth()->user()->role->access_permission;
+        $user_role = explode(", ", $user_permission);
+        $user_update = in_array("update", $user_role);
+
         return [
             "order_no" => [
                 "required",
                 Rule::unique("transactions", "order_no")
                     ->ignore($this->route("order"))
-                    ->when($requestor_role == 3, function ($query) use ($requestor_id) {
+                    ->when($requestor_role == 3 || $user_update, function ($query) use (
+                        $requestor_id
+                    ) {
                         return $query->where("requestor_id", $requestor_id);
                     })
                     // ->when($requestor_role == 2, function ($query) use ($requestor_id) {
@@ -54,14 +61,6 @@ class UpdateRequest extends FormRequest
             "customer.id" => "required",
             "customer.code" => "required",
             "customer.name" => "required",
-
-            "charge_department.id" => "required",
-            "charge_department.code" => "required",
-            "charge_department.name" => "required",
-
-            "charge_location.id" => "required",
-            "charge_location.code" => "required",
-            "charge_location.name" => "required",
 
             "rush" => "nullable",
 
@@ -113,6 +112,7 @@ class UpdateRequest extends FormRequest
     public function messages()
     {
         return [
+            "order_no.unique" => "You don't have permission to update this record.",
             "order.*.material.code.unique" => "This :attribute has already been ordered.",
             "order.*.material.id.distinct" => "This :attribute has already been ordered.",
         ];
@@ -131,16 +131,28 @@ class UpdateRequest extends FormRequest
             $date_today = Carbon::now()
                 ->timeZone("Asia/Manila")
                 ->format("Y-m-d");
+            $date_today_1 = Carbon::now()
+                ->addDay()
+                ->timeZone("Asia/Manila")
+                ->format("Y-m-d");
             $cutoff = date("H:i", strtotime(Cutoff::get()->value("time")));
 
             $is_rush =
                 date("Y-m-d", strtotime($this->input("date_needed"))) == $date_today &&
                 $time_now > $cutoff;
 
+            $is_advance =
+                date("Y-m-d", strtotime($this->input("date_needed"))) == $date_today_1 &&
+                $time_now > $cutoff;
+
             $with_rush_remarks = !empty($this->input("rush"));
 
             if ($is_rush && !$with_rush_remarks) {
-                $validator->errors()->add("rush", "The rush field is required.");
+                return $validator
+                    ->errors()
+                    ->add("rush", "The rush field is required cut off reach.");
+            } elseif ($is_advance && !$with_rush_remarks) {
+                $validator->errors()->add("rush", "The rush field is required cut off reach.");
             }
         });
     }

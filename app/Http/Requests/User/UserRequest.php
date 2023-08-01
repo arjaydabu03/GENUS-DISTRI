@@ -47,9 +47,11 @@ class UserRequest extends FormRequest
             "scope_order" => ["required_if:role_id,3", "array"],
             "role_id" => "required|exists:role,id,deleted_at,NULL",
             "mobile_no" => [
-                "required",
+                "required_if:role_id,7",
+                "exclude_unless:role_id,7",
                 "regex:[63]",
                 "digits:12",
+
                 $this->route()->id
                     ? "unique:users,mobile_no," . $this->route()->id
                     : "unique:users,mobile_no",
@@ -69,6 +71,7 @@ class UserRequest extends FormRequest
         return [
             "scope_approval" => "scope for approval",
             "scope_order" => "scope for ordering",
+            "mobile_no" => "mobile no",
         ];
     }
 
@@ -77,6 +80,7 @@ class UserRequest extends FormRequest
         return [
             "required_if" => "The :attribute field is required.",
             "exists" => "Role is not Registered",
+            "regex" => "The :attribute format must start with 63.",
         ];
     }
 

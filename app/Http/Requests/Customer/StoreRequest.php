@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\HRI;
+namespace App\Http\Requests\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DisplayRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,14 @@ class DisplayRequest extends FormRequest
     public function rules()
     {
         return [
-            "status" => ["required", "string", "in:active,inactive"],
+            "code" => [
+                "required",
+                "string",
+                $this->route()->customer
+                    ? "unique:customer,code," . $this->route()->customer
+                    : "unique:customer,code",
+            ],
+            "name" => ["required", "string"],
         ];
     }
 }

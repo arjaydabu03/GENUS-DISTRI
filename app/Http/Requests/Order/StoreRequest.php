@@ -47,6 +47,10 @@ class StoreRequest extends FormRequest
             "company.code" => "required",
             "company.name" => "required",
 
+            "client.id" => "required",
+            "client.code" => "required",
+            "client.name" => "required",
+
             "department.id" => "required",
             "department.code" => "required",
             "department.name" => "required",
@@ -61,18 +65,6 @@ class StoreRequest extends FormRequest
             "customer.id" => "required",
             "customer.code" => "required",
             "customer.name" => "required",
-            
-            "charge_company.id" => "required",
-            "charge_company.code" => "required",
-            "charge_company.name" => "required",
-
-            "charge_department.id" => "required",
-            "charge_department.code" => "required",
-            "charge_department.name" => "required",
-
-            "charge_location.id" => "required",
-            "charge_location.code" => "required",
-            "charge_location.name" => "required",
 
             "order.*.material.id" => ["required", "distinct"],
             "order.*.material.code" => [
@@ -135,16 +127,30 @@ class StoreRequest extends FormRequest
             $date_today = Carbon::now()
                 ->timeZone("Asia/Manila")
                 ->format("Y-m-d");
+
             $cutoff = date("H:i", strtotime(Cutoff::get()->value("time")));
 
             $is_rush =
                 date("Y-m-d", strtotime($this->input("date_needed"))) == $date_today &&
                 $time_now > $cutoff;
 
+            $date_today_1 = Carbon::now()
+                ->addDay()
+                ->timeZone("Asia/Manila")
+                ->format("Y-m-d");
+
+            $is_advance =
+                date("Y-m-d", strtotime($this->input("date_needed"))) == $date_today_1 &&
+                $time_now > $cutoff;
+
             $with_rush_remarks = !empty($this->input("rush"));
 
             if ($is_rush && !$with_rush_remarks) {
-                $validator->errors()->add("rush", "The rush field is required.");
+                return $validator
+                    ->errors()
+                    ->add("rush", "The rush field is required cut off reach.");
+            } elseif ($is_advance && !$with_rush_remarks) {
+                $validator->errors()->add("rush", "The rush field is required cut off reach.");
             }
         });
     }

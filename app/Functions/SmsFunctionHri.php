@@ -14,11 +14,12 @@ use App\Models\Transaction;
 use App\Models\UOM;
 use App\Models\Order;
 use App\Models\Cutoff;
+use App\Models\HRI;
 use App\Models\TagStoreLocation;
 
 use App\Functions\SendSMS;
 
-class SmsFunction
+class SmsFunctionHri
 {
     #-----------------------------------------------------------------
     #----------------------------MAIN VALIDATIONS---------------------
@@ -29,91 +30,102 @@ class SmsFunction
         $type = "header";
         $error = collect();
 
-        $unregistered_number = SmsFunction::unregistered_number_permission($header, $requestor_no);
+        $unregistered_number = SmsFunctionHri::unregistered_number_permission(
+            $header,
+            $requestor_no
+        );
         if ($unregistered_number) {
             return $unregistered_number;
         }
 
-        // $cut_off = SmsFunction::cut_off($header, $requestor_no);
-        // if ($cut_off) {
-        //     return $cut_off;
-        // }
+        $cut_off = SmsFunctionHri::cut_off($header, $requestor_no);
+        if ($cut_off) {
+            return $cut_off;
+        }
 
-        $missing_hashtag = SmsFunction::missing_hashtag($header, $requestor_no);
+        $missing_hashtag = SmsFunctionHri::missing_hashtag($header, $requestor_no);
         if ($missing_hashtag) {
             return $missing_hashtag;
         }
 
-        $multiple_hashtag = SmsFunction::multiple_hashtag($header, $requestor_no);
+        $multiple_hashtag = SmsFunctionHri::multiple_hashtag($header, $requestor_no);
         if ($multiple_hashtag) {
             return $multiple_hashtag;
         }
 
-        $missing_dash = SmsFunction::missing_dash($header, $type, $requestor_no);
+        $missing_dash = SmsFunctionHri::missing_dash($header, $type, $requestor_no);
         if ($missing_dash) {
             return $missing_dash;
         }
 
-        $multiple_dash = SmsFunction::multiple_dash($header, $type, $requestor_no);
+        $multiple_dash = SmsFunctionHri::multiple_dash($header, $type, $requestor_no);
         if ($multiple_dash) {
             return $multiple_dash;
         }
 
-        // $check_alphanumerics = SmsFunction::check_alphanumerics($header, $type, $requestor_no);
-        // if ($check_alphanumerics) {
-        //     return $check_alphanumerics;
-        // }
+        $check_alphanumerics = SmsFunctionHri::check_alphanumerics($header, $type, $requestor_no);
+        if ($check_alphanumerics) {
+            return $check_alphanumerics;
+        }
 
-        $missing_code = SmsFunction::missing_code($header, $type, $requestor_no);
+        $missing_code = SmsFunctionHri::missing_code($header, $type, $requestor_no);
         if ($missing_code) {
             return $missing_code;
         }
 
-        $missing_order_no = SmsFunction::missing_order_no($header, $requestor_no);
+        $missing_order_no = SmsFunctionHri::missing_order_no($header, $requestor_no);
         if ($missing_order_no) {
             return $missing_order_no;
         }
 
-        // $missing_year = SmsFunction::missing_year($header, $requestor_no);
-        // if ($missing_year) {
-        //     return $missing_year;
-        // }
+        $missing_year = SmsFunctionHri::missing_year($header, $requestor_no);
+        if ($missing_year) {
+            return $missing_year;
+        }
 
-        // $multiple_year = SmsFunction::multiple_year($header, $requestor_no);
-        // if ($multiple_year) {
-        //     return $multiple_year;
-        // }
-        // $missing_month = SmsFunction::missing_month($header, $requestor_no);
-        // if ($missing_month) {
-        //     return $missing_month;
-        // }
-        // $multiple_month = SmsFunction::multiple_month($header, $requestor_no);
-        // if ($multiple_month) {
-        //     return $multiple_month;
-        // }
-        // $over_count_month = SmsFunction::over_count_month($header, $requestor_no);
-        // if ($over_count_month) {
-        //     return $over_count_month;
-        // }
-        // $missing_day = SmsFunction::missing_day($header, $requestor_no);
-        // if ($missing_day) {
-        //     return $missing_day;
-        // }
-        // $multiple_day = SmsFunction::multiple_day($header, $requestor_no);
-        // if ($multiple_day) {
-        //     return $multiple_day;
-        // }
-        // $over_count_day = SmsFunction::over_count_day($header, $requestor_no);
-        // if ($over_count_day) {
-        //     return $over_count_day;
-        // }
-        // $invalid_date = SmsFunction::invalid_date($header, $requestor_no);
-        // if ($invalid_date) {
-        //     return $invalid_date;
-        // }
-        $store_not_exist = SmsFunction::store_not_exist($header, $requestor_no);
+        $multiple_year = SmsFunctionHri::multiple_year($header, $requestor_no);
+        if ($multiple_year) {
+            return $multiple_year;
+        }
+        $missing_month = SmsFunctionHri::missing_month($header, $requestor_no);
+        if ($missing_month) {
+            return $missing_month;
+        }
+        $multiple_month = SmsFunctionHri::multiple_month($header, $requestor_no);
+        if ($multiple_month) {
+            return $multiple_month;
+        }
+        $over_count_month = SmsFunctionHri::over_count_month($header, $requestor_no);
+        if ($over_count_month) {
+            return $over_count_month;
+        }
+        $missing_day = SmsFunctionHri::missing_day($header, $requestor_no);
+        if ($missing_day) {
+            return $missing_day;
+        }
+        $missing_hri = SmsFunctionHri::missing_hri($header, $requestor_no);
+        if ($missing_hri) {
+            return $missing_hri;
+        }
+        $multiple_day = SmsFunctionHri::multiple_day($header, $requestor_no);
+        if ($multiple_day) {
+            return $multiple_day;
+        }
+        $over_count_day = SmsFunctionHri::over_count_day($header, $requestor_no);
+        if ($over_count_day) {
+            return $over_count_day;
+        }
+        $invalid_date = SmsFunctionHri::invalid_date($header, $requestor_no);
+        if ($invalid_date) {
+            return $invalid_date;
+        }
+        $store_not_exist = SmsFunctionHri::store_not_exist($header, $requestor_no);
         if ($store_not_exist) {
             return $store_not_exist;
+        }
+        $hri_not_exist = SmsFunctionHri::hri_not_exist($header, $requestor_no);
+        if ($hri_not_exist) {
+            return $hri_not_exist;
         }
 
         return $error
@@ -127,29 +139,31 @@ class SmsFunction
         $type = "body";
 
         $error = collect();
-        $error->push($missing_dash_lines = SmsFunction::missing_dash($data, $type, $requestor_no));
         $error->push(
-            $multiple_dash_lines = SmsFunction::multiple_dash($data, $type, $requestor_no)
+            $missing_dash_lines = SmsFunctionHri::missing_dash($data, $type, $requestor_no)
         );
         $error->push(
-            $alphanumberic_lines = SmsFunction::check_alphanumerics($data, $type, $requestor_no)
+            $multiple_dash_lines = SmsFunctionHri::multiple_dash($data, $type, $requestor_no)
         );
         $error->push(
-            $missing_item_code_lines = SmsFunction::missing_code($data, $type, $requestor_no)
+            $alphanumberic_lines = SmsFunctionHri::check_alphanumerics($data, $type, $requestor_no)
         );
         $error->push(
-            $unregistered_item_code_lines = SmsFunction::unregistered_item_code(
+            $missing_item_code_lines = SmsFunctionHri::missing_code($data, $type, $requestor_no)
+        );
+        $error->push(
+            $unregistered_item_code_lines = SmsFunctionHri::unregistered_item_code(
                 $data,
                 $requestor_no
             )
         );
-        $error->push($missing_qty = SmsFunction::missing_qty($data, $requestor_no));
+        $error->push($missing_qty = SmsFunctionHri::missing_qty($data, $requestor_no));
         $error->push(
-            $duplicate_lines = SmsFunction::duplicate($header, $data, $requestor_no, $keyword)
+            $duplicate_lines = SmsFunctionHri::duplicate($header, $data, $requestor_no, $keyword)
         );
 
         $error->push(
-            $is_multiple_products = SmsFunction::is_multiple_products($data, $requestor_no)
+            $is_multiple_products = SmsFunctionHri::is_multiple_products($data, $requestor_no)
         );
 
         if (
@@ -160,7 +174,7 @@ class SmsFunction
                     ->toArray()
             ) > 0
         ) {
-            return SmsFunction::compose_order_error(
+            return SmsFunctionHri::compose_order_error(
                 $requestor_no,
                 $missing_dash_lines,
                 $multiple_dash_lines,
@@ -179,25 +193,27 @@ class SmsFunction
         $type = "body";
 
         $error = collect();
-        $error->push($missing_dash_lines = SmsFunction::missing_dash($data, $type, $requestor_no));
         $error->push(
-            $multiple_dash_lines = SmsFunction::multiple_dash($data, $type, $requestor_no)
+            $missing_dash_lines = SmsFunctionHri::missing_dash($data, $type, $requestor_no)
         );
         $error->push(
-            $alphanumberic_lines = SmsFunction::check_alphanumerics($data, $type, $requestor_no)
+            $multiple_dash_lines = SmsFunctionHri::multiple_dash($data, $type, $requestor_no)
         );
         $error->push(
-            $missing_item_code_lines = SmsFunction::missing_code($data, $type, $requestor_no)
+            $alphanumberic_lines = SmsFunctionHri::check_alphanumerics($data, $type, $requestor_no)
         );
         $error->push(
-            $unregistered_item_code_lines = SmsFunction::unregistered_item_code(
+            $missing_item_code_lines = SmsFunctionHri::missing_code($data, $type, $requestor_no)
+        );
+        $error->push(
+            $unregistered_item_code_lines = SmsFunctionHri::unregistered_item_code(
                 $data,
                 $requestor_no
             )
         );
-        $error->push($missing_qty = SmsFunction::missing_qty($data, $requestor_no));
+        $error->push($missing_qty = SmsFunctionHri::missing_qty($data, $requestor_no));
         $error->push(
-            $is_multiple_products = SmsFunction::is_multiple_products($data, $requestor_no)
+            $is_multiple_products = SmsFunctionHri::is_multiple_products($data, $requestor_no)
         );
 
         if (
@@ -208,7 +224,7 @@ class SmsFunction
                     ->toArray()
             ) > 0
         ) {
-            return SmsFunction::compose_order_error(
+            return SmsFunctionHri::compose_order_error(
                 $requestor_no,
                 $missing_dash_lines,
                 $multiple_dash_lines,
@@ -290,7 +306,7 @@ class SmsFunction
         $affected_rows = [];
         $with_dash = substr_count($data, "-");
 
-        if ($with_dash < 1 && $type == "header") {
+        if ($with_dash < 5 && $type == "header") {
             $type = "Missing dash";
             return $type;
         } elseif ($type == "body") {
@@ -314,7 +330,7 @@ class SmsFunction
         $affected_rows = [];
         $multiple_dash = substr_count($data, "-");
 
-        if ($multiple_dash > 1 && $type == "header") {
+        if ($multiple_dash > 5 && $type == "header") {
             $type = "Multiple dash";
             return $type;
         } elseif ($type == "body") {
@@ -364,101 +380,110 @@ class SmsFunction
             return $type;
         }
     }
+    public static function missing_hri($header, $requestor_no)
+    {
+        $hri = explode("-", $header)[2];
+        $type = "Missing hri customer.";
 
-    // public static function missing_year($header, $requestor_no)
-    // {
-    //     $year = explode("-", $header)[2];
-    //     $type = "Missing year.";
+        if (!$hri) {
+            return $type;
+        }
+    }
 
-    //     if (!$year) {
-    //         return $type;
-    //     }
-    // }
+    public static function missing_year($header, $requestor_no)
+    {
+        $year = explode("-", $header)[3];
+        $type = "Missing year.";
 
-    // public static function multiple_year($header, $requestor_no)
-    // {
-    //     $valid_year = strlen(explode("-", $header)[2]) == 4;
+        if (!$year) {
+            return $type;
+        }
+    }
 
-    //     $type = "Invalid year format.";
+    public static function multiple_year($header, $requestor_no)
+    {
+        $valid_year = strlen(explode("-", $header)[3]) == 4;
 
-    //     if (!$valid_year) {
-    //         return $type;
-    //     }
-    // }
+        $type = "Invalid year format.";
 
-    // public static function missing_month($header, $requestor_no)
-    // {
-    //     $month = explode("-", $header)[3];
-    //     $type = "Missing month.";
+        if (!$valid_year) {
+            return $type;
+        }
+    }
 
-    //     if (!$month) {
-    //         return $type;
-    //     }
-    // }
+    public static function missing_month($header, $requestor_no)
+    {
+        $month = explode("-", $header)[4];
+        $type = "Missing month.";
 
-    // public static function multiple_month($header, $requestor_no)
-    // {
-    //     $valid_month = strlen(explode("-", $header)[3]) == 2;
-    //     $type = "Invalid month format.";
+        if (!$month) {
+            return $type;
+        }
+    }
 
-    //     if (!$valid_month) {
-    //         return $type;
-    //     }
-    // }
+    public static function multiple_month($header, $requestor_no)
+    {
+        $valid_month = strlen(explode("-", $header)[4]) == 2;
+        $type = "Invalid month format.";
 
-    // public static function over_count_month($header, $requestor_no)
-    // {
-    //     $multiple_day = current(explode("#", explode("-", $header)[3])) > 12;
-    //     $type = "Month must be less than or equal to 12.";
+        if (!$valid_month) {
+            return $type;
+        }
+    }
 
-    //     if ($multiple_day) {
-    //         return $type;
-    //     }
-    // }
+    public static function over_count_month($header, $requestor_no)
+    {
+        $multiple_day = current(explode("#", explode("-", $header)[4])) > 12;
+        $type = "Month must be less than or equal to 12.";
 
-    // public static function missing_day($header, $requestor_no)
-    // {
-    //     $header_4 = isset(explode("-", $header)[4]) ? explode("-", $header)[4] : null;
-    //     $day = current(explode("#", $header_4));
-    //     $type = "Missing day.";
+        if ($multiple_day) {
+            return $type;
+        }
+    }
 
-    //     if (!$day) {
-    //         return $type;
-    //     }
-    // }
+    public static function missing_day($header, $requestor_no)
+    {
+        $header_4 = isset(explode("-", $header)[5]) ? explode("-", $header)[5] : null;
+        $day = current(explode("#", $header_4));
+        $type = "Missing day.";
 
-    // public static function multiple_day($header, $requestor_no)
-    // {
-    //     $header_4 = isset(explode("-", $header)[4]) ? explode("-", $header)[4] : null;
+        if (!$day) {
+            return $type;
+        }
+    }
 
-    //     $valid_day = strlen(current(explode("#", $header_4))) == 2;
-    //     $type = "Invalid day format.";
+    public static function multiple_day($header, $requestor_no)
+    {
+        $header_4 = isset(explode("-", $header)[5]) ? explode("-", $header)[5] : null;
 
-    //     if (!$valid_day) {
-    //         return $type;
-    //     }
-    // }
+        $valid_day = strlen(current(explode("#", $header_4))) == 2;
+        $type = "Invalid day format.";
 
-    // public static function over_count_day($header, $requestor_no)
-    // {
-    //     $header_4 = isset(explode("-", $header)[4]) ? explode("-", $header)[4] : null;
-    //     $multiple_day = current(explode("#", $header_4)) > 31;
-    //     $type = "Day must be less than or equal to 31.";
+        if (!$valid_day) {
+            return $type;
+        }
+    }
 
-    //     if ($multiple_day) {
-    //         return $type;
-    //     }
-    // }
+    public static function over_count_day($header, $requestor_no)
+    {
+        $header_4 = isset(explode("-", $header)[5]) ? explode("-", $header)[5] : null;
+        $multiple_day = current(explode("#", $header_4)) > 31;
+        $type = "Day must be less than or equal to 31.";
+
+        if ($multiple_day) {
+            return $type;
+        }
+    }
 
     public static function check_alphanumerics($data, $type, $requestor_no)
     {
         if ($type == "header") {
             $order_no = isset(explode("-", $data)[1]) ? explode("-", $data)[1] : null;
-            // $year = isset(explode("-", $data)[2]) ? explode("-", $data)[2] : null;
-            // $month = isset(explode("-", $data)[3]) ? explode("-", $data)[3] : null;
-            // $day = isset(explode("-", $data)[4]) ? explode("-", $data)[4] : null;
+            $year = isset(explode("-", $data)[3]) ? explode("-", $data)[3] : null;
+            $month = isset(explode("-", $data)[4]) ? explode("-", $data)[4] : null;
+            $day = isset(explode("-", $data)[5]) ? explode("-", $data)[5] : null;
 
-            $order_no_validation = SmsFunction::is_alphanumeric(
+            $order_no_validation = SmsFunctionHri::is_alphanumeric(
                 $order_no,
                 "order number",
                 $requestor_no
@@ -468,20 +493,20 @@ class SmsFunction
                 return $order_no_validation;
             }
 
-            // $year_validation = SmsFunction::is_alphanumeric($year, "year", $requestor_no);
-            // if ($year_validation) {
-            //     return $year_validation;
-            // }
+            $year_validation = SmsFunctionHri::is_alphanumeric($year, "year", $requestor_no);
+            if ($year_validation) {
+                return $year_validation;
+            }
 
-            // $month_validation = SmsFunction::is_alphanumeric($month, "month", $requestor_no);
-            // if ($month_validation) {
-            //     return $month_validation;
-            // }
+            $month_validation = SmsFunctionHri::is_alphanumeric($month, "month", $requestor_no);
+            if ($month_validation) {
+                return $month_validation;
+            }
 
-            // $day_validation = SmsFunction::is_alphanumeric($day, "day", $requestor_no);
-            // if ($day_validation) {
-            //     return $day_validation;
-            // }
+            $day_validation = SmsFunctionHri::is_alphanumeric($day, "day", $requestor_no);
+            if ($day_validation) {
+                return $day_validation;
+            }
         } elseif ($type == "body") {
             $affected_rows = [];
             $orders = array_values(array_filter(preg_split("/\\r\\n|\\r|\\n/", $data)));
@@ -508,34 +533,33 @@ class SmsFunction
         }
     }
 
-    // public static function invalid_date($header, $requestor_no)
-    // {
-    //     $header_2 = isset(explode("-", $header)[2]) ? explode("-", $header)[2] : null;
-    //     $header_3 = isset(explode("-", $header)[3]) ? explode("-", $header)[3] : null;
-    //     $header_4 = isset(explode("-", $header)[4]) ? explode("-", $header)[4] : null;
-    //     $header_hash_0 = isset(explode("#", $header_4)[0]) ? explode("#", $header_4)[0] : null;
+    public static function invalid_date($header, $requestor_no)
+    {
+        $header_2 = isset(explode("-", $header)[3]) ? explode("-", $header)[3] : null;
+        $header_3 = isset(explode("-", $header)[4]) ? explode("-", $header)[4] : null;
+        $header_4 = isset(explode("-", $header)[5]) ? explode("-", $header)[5] : null;
+        $header_hash_0 = isset(explode("#", $header_4)[0]) ? explode("#", $header_4)[0] : null;
 
-    //     $year = $header_2;
-    //     $month = $header_3;
-    //     $day = $header_hash_0;
+        $year = $header_2;
+        $month = $header_3;
+        $day = $header_hash_0;
 
-    //     $date = $year . "-" . $month . "-" . $day;
-    //     $date_today = date("Y-m-d", strtotime(Carbon::now()));
+        $date = $year . "-" . $month . "-" . $day;
+        $date_today = date("Y-m-d", strtotime(Carbon::now()));
 
-    //     if ($date < $date_today) {
-    //         $type = "Invalid date needed.";
-    //         return $type;
-    //     } elseif ($date == $date_today) {
-    //         $type = "date needed must be tommorow.";
-    //         return $type;
-    //     }
-    // }
+        if ($date < $date_today) {
+            $type = "Invalid date needed.";
+            return $type;
+            // } elseif ($date == $date_today) {
+            //     $type = "date needed must be tommorow.";
+            //     return $type;
+        }
+    }
 
     public static function store_not_exist($header, $requestor_no)
     {
         $store_code = explode("-", $header)[0];
-        $is_tag = User::with("scope_order")
-            ->where("mobile_no", $requestor_no)
+        $is_tag = User::where("mobile_no", $requestor_no)
             ->whereHas("scope_order", function ($query) use ($store_code) {
                 $query->where("location_code", $store_code);
             })
@@ -545,19 +569,28 @@ class SmsFunction
             return "Store not tagged.";
         }
     }
+    public static function hri_not_exist($header, $requestor_no)
+    {
+        $hri_code = explode("-", $header)[2];
+        $is_tag = HRI::where("code", $hri_code)->exists();
 
-    // public static function cut_off($header, $requestor_no)
-    // {
-    //     $cutoff = "12:00";
-    //     $time_now = Carbon::now()
-    //         ->timezone("Asia/Manila")
-    //         ->format("H:i");
+        if (!$is_tag) {
+            return "Invalid HRI Customer.";
+        }
+    }
 
-    //     if ($time_now > $cutoff) {
-    //         $type = "Cut off reach.";
-    //         return $type;
-    //     }
-    // }
+    public static function cut_off($header, $requestor_no)
+    {
+        $cutoff = Cutoff::get()->first();
+        $time_now = Carbon::now()
+            ->timezone("Asia/Manila")
+            ->format("H:i");
+
+        if ($time_now > $cutoff) {
+            $type = "Cut off reach.";
+            return $type;
+        }
+    }
 
     public static function unregistered_number_permission($header, $requestor_no)
     {
@@ -585,7 +618,7 @@ class SmsFunction
     {
         $affected_rows = [];
         $orders = array_values(array_filter(preg_split("/\\r\\n|\\r|\\n/", $data)));
-        $materials = SmsFunction::get_materials();
+        $materials = SmsFunctionHri::get_materials();
 
         foreach ($orders as $k => $order) {
             $item_code = explode("-", $order)[0];
@@ -619,7 +652,7 @@ class SmsFunction
         $order_no = explode("-", $header)[1];
         $order_no = explode("#", $order_no)[0];
         $orders = array_values(array_filter(preg_split("/\\r\\n|\\r|\\n/", $data)));
-        $transactions = SmsFunction::get_transaction_orders();
+        $transactions = SmsFunctionHri::get_transaction_orders();
         $date_today = date("Y-m-d", strtotime(Carbon::now()));
         $requestor_id = User::where("mobile_no", $requestor_no)->first()->id;
         $account_name = User::where("mobile_no", $requestor_no)->first()->account_name;
@@ -686,6 +719,11 @@ class SmsFunction
         $type = "success";
         $store_code = explode("-", $header)[0];
         $store_details = User::where("mobile_no", $requestor_no)->first();
+        $hri_code = explode("-", $header)[2];
+        $hri_details = HRI::where("code", $hri_code)->first();
+        $hri_id = $hri_details->id;
+        $hri_code = $hri_details->code;
+        $hri_name = $hri_details->name;
         $location_id = $store_details->location_id;
         $location_code = $store_details->location_code;
         $location = $store_details->location;
@@ -701,17 +739,21 @@ class SmsFunction
         $role = $store_details->role_id;
 
         $order_no = explode("-", $header)[1];
+        $year = explode("-", $header)[3];
+        $month = explode("-", $header)[4];
+        $day = explode("-", $header)[5];
+        $date_needed = $year . "-" . $month . "-" . $day;
 
-        $order_no = explode("#", $order_no)[0];
-
-        $date_needed = date("Y-m-d", strtotime(Carbon::now()->addDay()));
-
-        $get_materials = SmsFunction::get_materials();
+        $get_materials = SmsFunctionHri::get_materials();
         $orders = array_values(array_filter(preg_split("/\\r\\n|\\r|\\n/", $body)));
 
         $transaction = Transaction::create([
             "order_no" => $order_no,
             "date_needed" => $date_needed,
+
+            "hri_id" => $hri_id,
+            "hri_code" => $hri_code,
+            "hri_name" => $hri_name,
 
             "company_id" => $company_id,
             "company_code" => $company_code,
@@ -786,7 +828,7 @@ class SmsFunction
             ]);
         }
 
-        return SmsFunction::viber($requestor_id, $type);
+        return SmsFunctionHri::viber($requestor_id, $type);
     }
 
     public static function get_transaction($date_needed, $store_code, $order_no)
@@ -817,7 +859,7 @@ class SmsFunction
             explode("-", $header)[4];
 
         $orders = array_values(array_filter(preg_split("/\\r\\n|\\r|\\n/", $body)));
-        $transaction = SmsFunction::get_transaction($date_needed, $store_code, $order_no);
+        $transaction = SmsFunctionHri::get_transaction($date_needed, $store_code, $order_no);
 
         if ($transaction && $transaction->orders) {
             foreach ($orders as $order) {
@@ -835,7 +877,7 @@ class SmsFunction
             }
         }
 
-        $transaction = SmsFunction::get_transaction($date_needed, $store_code, $order_no);
+        $transaction = SmsFunctionHri::get_transaction($date_needed, $store_code, $order_no);
         $is_empty_transaction = empty($transaction);
 
         if ($is_empty_transaction) {

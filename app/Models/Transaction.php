@@ -23,7 +23,10 @@ class Transaction extends Model
         "date_served",
         "reason",
         "order_type",
-        "hri_customer",
+
+        "client_id",
+        "client_code",
+        "client_name",
 
         "company_id",
         "company_code",
@@ -41,17 +44,17 @@ class Transaction extends Model
         "customer_code",
         "customer_name",
 
-        "charge_company_id",
-        "charge_company_code",
-        "charge_company_name",
+        // "charge_company_id",
+        // "charge_company_code",
+        // "charge_company_name",
 
-        "charge_department_id",
-        "charge_department_code",
-        "charge_department_name",
+        // "charge_department_id",
+        // "charge_department_code",
+        // "charge_department_name",
 
-        "charge_location_id",
-        "charge_location_code",
-        "charge_location_name",
+        // "charge_location_id",
+        // "charge_location_code",
+        // "charge_location_name",
 
         "requestor_id",
         "requestor_name",
