@@ -38,26 +38,23 @@ class OrderController extends Controller
         $rows = $request->input("rows", 10);
         $from = $request->from;
         $to = $request->to;
+        $date_today = Carbon::now()
+            ->timeZone("Asia/Manila")
+            ->format("Y-m-d");
 
         $order = Transaction::with("orders")
             ->where("requestor_id", Auth::id())
             ->where(function ($query) use ($search) {
                 $query
                     ->where("date_ordered", "like", "%" . $search . "%")
-                    ->orWhere("hri_code", "like", "%" . $search . "%")
-                    ->orWhere("hri_name", "like", "%" . $search . "%")
+                    ->orWhere("client_name", "like", "%" . $search . "%")
                     ->orWhere("order_no", "like", "%" . $search . "%")
                     ->orWhere("date_needed", "like", "%" . $search . "%")
                     ->orWhere("date_approved", "like", "%" . $search . "%")
                     ->orWhere("company_name", "like", "%" . $search . "%")
                     ->orWhere("department_name", "like", "%" . $search . "%")
                     ->orWhere("location_name", "like", "%" . $search . "%")
-                    ->orWhere("customer_code", "like", "%" . $search . "%")
-                    ->orWhere("customer_name", "like", "%" . $search . "%")
-                    ->orWhere("charge_department_code", "like", "%" . $search . "%")
-                    ->orWhere("charge_department_name", "like", "%" . $search . "%")
-                    ->orWhere("charge_location_code", "like", "%" . $search . "%")
-                    ->orWhere("charge_location_name", "like", "%" . $search . "%");
+                    ->orWhere("customer_name", "like", "%" . $search . "%");
             })
             ->when(isset($request->from) && isset($request->to), function ($query) use (
                 $from,
@@ -69,11 +66,8 @@ class OrderController extends Controller
                         ->whereDate("date_ordered", "<=", $to);
                 });
             })
-            ->when($status === "pending", function ($query) {
-                $query->whereNull("date_approved");
-            })
-            ->when($status === "approve", function ($query) {
-                $query->whereNotNull("date_approved");
+            ->when($status === "approve", function ($query) use ($date_today) {
+                $query->whereNotNull("date_approved")->whereDate("date_ordered", $date_today);
             })
             ->when($status === "disapprove", function ($query) {
                 $query->whereNotNull("date_approved")->onlyTrashed();
@@ -81,7 +75,6 @@ class OrderController extends Controller
             ->when($status === "all", function ($query) {
                 $query->withTrashed();
             })
-            ->orderByRaw("CASE WHEN rush IS NULL THEN 0 ELSE 1 END DESC")
             ->orderByDesc("updated_at")
             ->paginate($rows);
 
@@ -115,6 +108,15 @@ class OrderController extends Controller
         $user_permission = Auth()->user()->role->access_permission;
         $user_role = explode(", ", $user_permission);
 
+        // $time_now = Carbon::now()
+        //     ->timezone("Asia/Manila")
+        //     ->format("H:i");
+        // $cutoff = date("H:i", strtotime(Cutoff::get()->value("time")));
+
+        // if ($time_now > $cutoff) {
+        //     return GlobalFunction::denied(Status::CUT_OFF);
+        // }
+
         $transaction = Transaction::create([
             "order_no" => $request["order_no"],
 
@@ -123,7 +125,6 @@ class OrderController extends Controller
                 ->timeZone("Asia/Manila")
                 ->format("Y-m-d H:i"),
 
-            "rush" => $request["rush"],
             "order_type" => "online",
 
             "client_id" => $request["client"]["id"],
@@ -204,6 +205,16 @@ class OrderController extends Controller
         $user_permission = Auth()->user()->role->access_permission;
         $user_role = explode(", ", $user_permission);
         $user_update = in_array("update", $user_role);
+
+        $time_now = Carbon::now()
+            ->timezone("Asia/Manila")
+            ->format("H:i");
+        $cutoff = date("H:i", strtotime(Cutoff::get()->value("time")));
+
+        if ($time_now > $cutoff) {
+            return GlobalFunction::denied(Status::CUT_OFF);
+        }
+
         $transaction = Transaction::find($id);
 
         $orders = $request->order;
@@ -306,6 +317,15 @@ class OrderController extends Controller
         $reason = $request->reason;
         $transaction = Transaction::where("id", $id);
 
+        $time_now = Carbon::now()
+            ->timezone("Asia/Manila")
+            ->format("H:i");
+        $cutoff = date("H:i", strtotime(Cutoff::get()->value("time")));
+
+        if ($time_now > $cutoff) {
+            return GlobalFunction::denied(Status::CUT_OFF);
+        }
+
         $not_found = $transaction->get();
         if ($not_found->isEmpty()) {
             return GlobalFunction::not_found(Status::NOT_FOUND);
@@ -354,6 +374,14 @@ class OrderController extends Controller
             ->with("scope_approval")
             ->first()
             ->scope_approval->pluck("location_code");
+        $time_now = Carbon::now()
+            ->timezone("Asia/Manila")
+            ->format("H:i");
+        $cutoff = date("H:i", strtotime(Cutoff::get()->value("time")));
+
+        if ($time_now > $cutoff) {
+            return GlobalFunction::denied(Status::CUT_OFF);
+        }
 
         $order = Order::where("id", $id);
 

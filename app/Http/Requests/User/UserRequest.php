@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
@@ -22,6 +23,7 @@ class UserRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
+
     public function rules()
     {
         return [
@@ -43,12 +45,10 @@ class UserRequest extends FormRequest
             "company.id" => "required",
             "company.code" => "required",
             "company.name" => "required",
-            "scope_approval" => ["required_if:role_id,2", "array"],
-            "scope_order" => ["required_if:role_id,3", "array"],
+            "scope_order" => ["required_if:role_id,2", "array"],
             "role_id" => "required|exists:role,id,deleted_at,NULL",
             "mobile_no" => [
-                "required_if:role_id,7",
-                "exclude_unless:role_id,7",
+                "required",
                 "regex:[63]",
                 "digits:12",
 
@@ -89,6 +89,17 @@ class UserRequest extends FormRequest
         $validator->after(function ($validator) {
             // $validator->errors()->add("custom", "STOP!");
             // $validator->errors()->add("custom", $this->route()->id);
+
+            // $user_permission = Auth()->user()->role->access_permission;
+            // $user_role = explode(", ", $user_permission);
+            // $user_approval = in_array("approval", $user_role);
+            // $user_order = in_array("order", $user_role);
+            // $with_rush_remarks = !empty($this->input("rush"));
+            // if (!$user_approval) {
+            //     return $validator->errors()->add("scope_approval", "this field is required.");
+            // } elseif ($user_order) {
+            //     return $validator->errors()->add("scope_order", "this field is required.");
+            // }
         });
     }
 }

@@ -187,7 +187,7 @@ class UserController extends Controller
         $user["cut_off"] = $cut_off;
         $user = new LoginResource($user);
 
-        $cookie = cookie("authcookie", $token);
+        $cookie = cookie("distri", $token);
 
         return GlobalFunction::response_function(Status::LOGIN_USER, $user)->withCookie($cookie);
     }

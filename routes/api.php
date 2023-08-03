@@ -96,9 +96,9 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::apiResource("location", LocationController::class);
 
     Route::apiResource("customer", CustomerController::class);
-    Route::post("import_cutomer", [CustomerController::class, "import_cutomer"]);
-    Route::post("cutomer/validate", [CustomerController::class, "validate_cutomer_code"]);
-    Route::patch("cutomer_archive/{id}", [CustomerController::class, "destroy"]);
+    Route::post("import_customer", [CustomerController::class, "import_customer"]);
+    Route::post("customer/validate", [CustomerController::class, "validate_customer_code"]);
+    Route::patch("customer_archive/{id}", [CustomerController::class, "destroy"]);
 });
 
 Route::post("login", [UserController::class, "login"]);

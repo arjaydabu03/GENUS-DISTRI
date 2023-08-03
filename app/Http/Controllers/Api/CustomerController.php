@@ -51,7 +51,7 @@ class CustomerController extends Controller
         ]);
         return GlobalFunction::save(Status::CUSTOMER_SAVE, $customer);
     }
-    public function import_cutomer(ImportRequest $request)
+    public function import_customer(ImportRequest $request)
     {
         $import = $request->all();
 
@@ -100,7 +100,7 @@ class CustomerController extends Controller
         }
         return GlobalFunction::response_function($message, $customer);
     }
-    public function validate_cutomer_code(CodeRequest $request)
+    public function validate_customer_code(CodeRequest $request)
     {
         return GlobalFunction::response_function(Status::SINGLE_VALIDATION);
     }

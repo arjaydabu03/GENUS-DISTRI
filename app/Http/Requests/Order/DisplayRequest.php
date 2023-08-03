@@ -24,7 +24,7 @@ class DisplayRequest extends FormRequest
     public function rules()
     {
         return [
-            "status" => ["required", "string", "in:all,pending,approve,disapprove,today"],
+            "status" => ["required", "string", "in:all,approve,disapprove,today"],
         ];
     }
 }

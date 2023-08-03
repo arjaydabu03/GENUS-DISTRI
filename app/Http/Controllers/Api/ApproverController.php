@@ -53,7 +53,6 @@ class ApproverController extends Controller
                     ->orWhere("company_name", "like", "%" . $search . "%")
                     ->orWhere("department_name", "like", "%" . $search . "%")
                     ->orWhere("location_name", "like", "%" . $search . "%")
-                    ->orWhere("customer_code", "like", "%" . $search . "%")
                     ->orWhere("customer_name", "like", "%" . $search . "%");
             })
             ->when(isset($request->from) && isset($request->to), function ($query) use (
