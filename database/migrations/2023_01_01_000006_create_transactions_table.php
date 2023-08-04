@@ -25,6 +25,10 @@ return new class extends Migration {
             $table->string("client_code")->nullable();
             $table->string("client_name")->nullable();
 
+            $table->integer("drop_id");
+            $table->string("drop_code");
+            $table->string("drop_name");
+
             $table->integer("company_id");
             $table->string("company_code");
             $table->string("company_name");

@@ -28,6 +28,10 @@ class Transaction extends Model
         "client_code",
         "client_name",
 
+        "drop_id",
+        "drop_code",
+        "drop_name",
+
         "company_id",
         "company_code",
         "company_name",

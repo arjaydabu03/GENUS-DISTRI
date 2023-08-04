@@ -35,6 +35,12 @@ class TransactionResource extends JsonResource
                 "name" => $this->client_name,
             ],
 
+            "drop" => [
+                "id" => $this->drop_id,
+                "code" => $this->drop_code,
+                "name" => $this->drop_name,
+            ],
+
             "company" => [
                 "id" => $this->company_id,
                 "code" => $this->company_code,

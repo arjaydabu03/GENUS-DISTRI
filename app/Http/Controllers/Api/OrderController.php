@@ -129,9 +129,16 @@ class OrderController extends Controller
 
             "order_type" => $user_type_code,
 
-            "client_id" => $request["client"]["id"],
-            "client_code" => $request["client"]["code"],
-            "client_name" => $request["client"]["name"],
+            "client_id" =>
+                $user->order_type_code == "GT" ? $user->location_id : $request["client"]["id"],
+            "client_code" =>
+                $user->order_type_code == "GT" ? $user->location_code : $request["client"]["code"],
+            "client_name" =>
+                $user->order_type_code == "GT" ? $user->location : $request["client"]["name"],
+
+            "drop_id" => $request["drop"]["id"],
+            "drop_code" => $request["drop"]["code"],
+            "drop_name" => $request["drop"]["name"],
 
             "company_id" => $request["company"]["id"],
             "company_code" => $request["company"]["code"],
@@ -233,6 +240,11 @@ class OrderController extends Controller
         $transaction->update([
             "client_code" => $request["client"]["code"],
             "client_name" => $request["client"]["name"],
+
+            "drop_id" => $request["drop"]["id"],
+            "drop_code" => $request["drop"]["code"],
+            "drop_name" => $request["drop"]["name"],
+
             "date_needed" => date("Y-m-d", strtotime($request["date_needed"])),
         ]);
 
