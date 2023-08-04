@@ -27,6 +27,9 @@ class User extends Authenticatable
         "location_id",
         "location_code",
         "location",
+        "order_type_id",
+        "order_type_code",
+        "order_type_desc",
 
         "department_id",
         "department_code",

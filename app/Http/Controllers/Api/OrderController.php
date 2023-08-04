@@ -54,6 +54,7 @@ class OrderController extends Controller
                     ->orWhere("company_name", "like", "%" . $search . "%")
                     ->orWhere("department_name", "like", "%" . $search . "%")
                     ->orWhere("location_name", "like", "%" . $search . "%")
+                    ->orWhere("order_type", "like", "%" . $search . "%")
                     ->orWhere("customer_name", "like", "%" . $search . "%");
             })
             ->when(isset($request->from) && isset($request->to), function ($query) use (
@@ -107,6 +108,7 @@ class OrderController extends Controller
         $user = Auth()->user();
         $user_permission = Auth()->user()->role->access_permission;
         $user_role = explode(", ", $user_permission);
+        $user_type_code = $user->order_type_code;
 
         // $time_now = Carbon::now()
         //     ->timezone("Asia/Manila")
@@ -125,7 +127,7 @@ class OrderController extends Controller
                 ->timeZone("Asia/Manila")
                 ->format("Y-m-d H:i"),
 
-            "order_type" => "online",
+            "order_type" => $user_type_code,
 
             "client_id" => $request["client"]["id"],
             "client_code" => $request["client"]["code"],
@@ -146,18 +148,6 @@ class OrderController extends Controller
             "customer_id" => $request["customer"]["id"],
             "customer_code" => $request["customer"]["code"],
             "customer_name" => $request["customer"]["name"],
-
-            // "charge_company_id" => $request["charge_company"]["id"],
-            // "charge_company_code" => $request["charge_company"]["code"],
-            // "charge_company_name" => $request["charge_company"]["name"],
-
-            // "charge_department_id" => $request["charge_department"]["id"],
-            // "charge_department_code" => $request["charge_department"]["code"],
-            // "charge_department_name" => $request["charge_department"]["name"],
-
-            // "charge_location_id" => $request["charge_location"]["id"],
-            // "charge_location_code" => $request["charge_location"]["code"],
-            // "charge_location_name" => $request["charge_location"]["name"],
 
             "requestor_id" => $request["requestor"]["id"],
             "requestor_name" => $request["requestor"]["name"],
@@ -206,14 +196,14 @@ class OrderController extends Controller
         $user_role = explode(", ", $user_permission);
         $user_update = in_array("update", $user_role);
 
-        $time_now = Carbon::now()
-            ->timezone("Asia/Manila")
-            ->format("H:i");
-        $cutoff = date("H:i", strtotime(Cutoff::get()->value("time")));
+        // $time_now = Carbon::now()
+        //     ->timezone("Asia/Manila")
+        //     ->format("H:i");
+        // $cutoff = date("H:i", strtotime(Cutoff::get()->value("time")));
 
-        if ($time_now > $cutoff) {
-            return GlobalFunction::denied(Status::CUT_OFF);
-        }
+        // if ($time_now > $cutoff) {
+        //     return GlobalFunction::denied(Status::CUT_OFF);
+        // }
 
         $transaction = Transaction::find($id);
 
@@ -241,21 +231,8 @@ class OrderController extends Controller
         }
 
         $transaction->update([
-            // "charge_company_id" => $request["charge_company"]["id"],
-            // "charge_company_code" => $request["charge_company"]["code"],
-            // "charge_company_name" => $request["charge_company"]["name"],
-
             "client_code" => $request["client"]["code"],
             "client_name" => $request["client"]["name"],
-
-            // "charge_department_id" => $request["charge_department"]["id"],
-            // "charge_department_code" => $request["charge_department"]["code"],
-            // "charge_department_name" => $request["charge_department"]["name"],
-
-            // "charge_location_id" => $request["charge_location"]["id"],
-            // "charge_location_code" => $request["charge_location"]["code"],
-            // "charge_location_name" => $request["charge_location"]["name"],
-            "rush" => $request["rush"],
             "date_needed" => date("Y-m-d", strtotime($request["date_needed"])),
         ]);
 

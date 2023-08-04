@@ -28,6 +28,7 @@ class Status
     const ROLE_SAVE = "Role successfully saved.";
     const CUTOFF_SAVE = "Cut off successfully saved.";
     const CUSTOMER_SAVE = "Customer successfully saved.";
+    const ORDERTYPE_SAVE = "Transaction type successfully saved.";
     // DISPLAY DATA
     const USER_DISPLAY = "User display successfully.";
     const CUSTOMER_DISPLAY = "Customer display successfully.";
@@ -43,6 +44,7 @@ class Status
     const COMPANY_DISPLAY = "Company display successfully.";
     const DEPARTMENT_DISPLAY = "Department display successfully.";
     const LOCATION_DISPLAY = "Location display successfully.";
+    const ORDERTYPE_DISPLAY = "Transaction type display successfully.";
     //UPDATE
     const USER_UPDATE = "User successfully updated.";
     const CATEGORY_UPDATE = "Category successfully updated.";
@@ -56,6 +58,7 @@ class Status
     const TRANSACTION_RETURN = "Transaction successfully return.";
     const TRANSACTION_SERVE = "Transaction successfully serve.";
     const CUSTOMER_UPDATE = "Customer successfully updated.";
+    const ORDERTYPE_UPDATE = "Customer successfully updated.";
     //SOFT DELETE
     const ARCHIVE_STATUS = "Successfully archived.";
     const RESTORE_STATUS = "Successfully restored.";

@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\OrderTypeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -99,6 +100,10 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::post("import_customer", [CustomerController::class, "import_customer"]);
     Route::post("customer/validate", [CustomerController::class, "validate_customer_code"]);
     Route::patch("customer_archive/{id}", [CustomerController::class, "destroy"]);
+
+    Route::apiResource("order_type", OrderTypeController::class);
+    Route::post("order_type_validate", [OrderTypeController::class, "order_type_validate"]);
+    Route::patch("order_type_archive/{id}", [OrderTypeController::class, "destroy"]);
 });
 
 Route::post("login", [UserController::class, "login"]);

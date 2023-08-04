@@ -18,6 +18,10 @@ return new class extends Migration {
             $table->string("account_name");
             $table->string("mobile_no");
 
+            $table->integer("order_type_id");
+            $table->string("order_type_code");
+            $table->string("order_type_desc");
+
             $table->string("username")->unique();
             $table->string("password");
 

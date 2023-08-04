@@ -134,6 +134,11 @@ class UserController extends Controller
 
             "role_id" => $request["role_id"],
             "mobile_no" => $request["mobile_no"],
+
+            "order_type_id" => $request["order_type"]["id"],
+            "order_type_code" => $request["order_type"]["code"],
+            "order_type_desc" => $request["order_type"]["desc"],
+
             "username" => $request["username"],
             "password" => Hash::make($request["username"]),
         ]);
@@ -307,6 +312,10 @@ class UserController extends Controller
             "mobile_no" => $request["mobile_no"],
             "username" => $request["username"],
             "role_id" => $request["role_id"],
+
+            "order_type_id" => $request["order_type"]["id"],
+            "order_type_code" => $request["order_type"]["code"],
+            "order_type_desc" => $request["order_type"]["desc"],
 
             "location_id" => $request["location"]["id"],
             "location_code" => $request["location"]["code"],

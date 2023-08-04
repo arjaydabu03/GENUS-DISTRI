@@ -132,8 +132,8 @@ class StoreRequest extends FormRequest
                 date("Y-m-d", strtotime($this->input("date_needed"))) == $date_today &&
                 $time_now > $cutoff;
 
-            if ($is_rush && !$with_rush_remarks) {
-                $validator->errors()->add("date_needed", "The date needed must be advance.");
+            if ($is_rush) {
+                $validator->errors()->add("date_needed", "Cut off reach.");
             }
         });
     }

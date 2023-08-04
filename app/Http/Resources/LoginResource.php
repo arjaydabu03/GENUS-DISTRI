@@ -17,6 +17,12 @@ class LoginResource extends JsonResource
         return [
             "id" => $this->id,
             "mobile_no" => $this->mobile_no,
+
+            "order_type" => [
+                "id" => $this->order_type_id,
+                "code" => $this->order_type_code,
+                "desctiption" => $this->order_type_desc,
+            ],
             "account" => [
                 "code" => $this->account_code,
                 "name" => $this->account_name,
@@ -41,6 +47,7 @@ class LoginResource extends JsonResource
             "scope_approval" => $this->scope_approval,
             "scope_order" => $this->scope_order,
             "username" => $this->username,
+
             "token" => $this->token,
         ];
     }
