@@ -129,12 +129,11 @@ class OrderController extends Controller
 
             "order_type" => $user_type_code,
 
-            "client_id" =>
-                $user->order_type_code == "GT" ? $user->location_id : $request["client"]["id"],
+            "client_id" => $user->order_type_code == "GT" ? $user->id : $request["client"]["id"],
             "client_code" =>
-                $user->order_type_code == "GT" ? $user->location_code : $request["client"]["code"],
+                $user->order_type_code == "GT" ? $user->account_code : $request["client"]["code"],
             "client_name" =>
-                $user->order_type_code == "GT" ? $user->location : $request["client"]["name"],
+                $user->order_type_code == "GT" ? $user->account_name : $request["client"]["name"],
 
             "drop_id" => $request["drop"]["id"],
             "drop_code" => $request["drop"]["code"],
@@ -321,10 +320,7 @@ class OrderController extends Controller
         }
 
         $not_allowed = $transaction
-            ->when($user->role_id == 3, function ($query) use ($user) {
-                return $query->where("requestor_id", $user->id);
-            })
-            ->when($user->role_id == 2, function ($query) use ($user_scope) {
+            ->when($user->role_id == 3, function ($query) use ($user_scope) {
                 return $query->whereIn("department_id", $user_scope);
             })
             ->get();
